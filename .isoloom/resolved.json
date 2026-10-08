@@ -1,0 +1,144 @@
+{
+  "generated_by_isoloom": "from isoloom.yml; don't edit: change the spec and run `isoloom generate` (`isoloom check` fails when this file is out of date)",
+  "resolved_version": 1,
+  "name": "vulhub-struts2-s2-061",
+  "instance": null,
+  "inputs": [],
+  "networks": {
+    "lab": {
+      "cidr": "10.61.14.0/24",
+      "docker_cidr": "10.61.14.0/24",
+      "internet": false,
+      "gateway": null,
+      "gateway_address": "10.61.14.1",
+      "router": null,
+      "controller": "10.61.14.253"
+    }
+  },
+  "reach": [],
+  "machines": {
+    "struts2": {
+      "access": false,
+      "supplied": false,
+      "shapes": [
+        "docker"
+      ],
+      "arch": "amd64",
+      "os": null,
+      "windows": false,
+      "addresses": {
+        "lab": "10.61.14.10"
+      },
+      "docker_addresses": {
+        "lab": "10.61.14.10"
+      },
+      "services": [
+        {
+          "port": 8080,
+          "name": "web",
+          "http": true,
+          "publish": 8080
+        }
+      ],
+      "depends_on": [],
+      "inputs": [],
+      "volumes": {},
+      "resources": {
+        "cpus": 1,
+        "memory_mb": 512,
+        "disk_gb": 20
+      },
+      "gateway_of": [],
+      "routes": [],
+      "default_gateway": null,
+      "offline": true
+    }
+  },
+  "start_order": [
+    "struts2"
+  ],
+  "clones": {},
+  "tools": {},
+  "groups": {},
+  "router": null,
+  "controller": {
+    "addresses": {
+      "lab": "10.61.14.253"
+    }
+  },
+  "published": [
+    {
+      "machine": "struts2",
+      "port": 8080,
+      "host_port": 8080
+    }
+  ],
+  "targets": {
+    "possible": [
+      "docker",
+      "hosted",
+      "docker-vm",
+      "cloud-docker",
+      "kubernetes"
+    ],
+    "generated": [
+      "docker",
+      "hosted",
+      "docker-vm",
+      "cloud-docker",
+      "kubernetes"
+    ],
+    "refused": {},
+    "not_possible": {
+      "hybrid": "only when some machines are containers and others are VMs",
+      "vagrant": "needs `vm:` on struts2",
+      "proxmox": "needs `vm:` on struts2",
+      "cloud-vm": "needs `vm:` on struts2",
+      "external": "needs `external:` on struts2"
+    }
+  },
+  "checks": {
+    "default_position": "networks",
+    "positions": [
+      {
+        "position": "networks",
+        "machine": null,
+        "runner": "isoloom-check",
+        "checks": [
+          {
+            "name": "the application answers",
+            "derived": false,
+            "kind": "http",
+            "target": "http://struts2:8080/",
+            "expect": "200",
+            "wait": 120
+          },
+          {
+            "name": "the index echoes the id parameter into the page",
+            "derived": false,
+            "kind": "script",
+            "target": "checks/app.sh",
+            "expect": "",
+            "wait": 60
+          }
+        ]
+      },
+      {
+        "position": "struts2",
+        "machine": "struts2",
+        "runner": "isoloom-check-struts2",
+        "checks": [
+          {
+            "name": "no internet from struts2",
+            "derived": true,
+            "kind": "http",
+            "target": "http://1.1.1.1/",
+            "expect": "blocked",
+            "wait": 0
+          }
+        ]
+      }
+    ]
+  },
+  "message": "A Struts2 2.5.25 application answers at http://localhost:8080/.\nThe page puts the id parameter into a tag attribute. How many times is it evaluated?\n"
+}

@@ -1,0 +1,15 @@
+{
+  "title": "Apache Struts2 S2-061 Forced OGNL Evaluation",
+  "description": "A Struts2 2.5.25 application, vulnerable to S2-061 (CVE-2020-17530): the page sets a tag attribute from the id parameter with %{...}, forcing a second OGNL evaluation of user input; a payload that sidesteps the S2-059 sandbox runs commands.",
+  "question": "Exploit S2-061 through the id parameter to run commands on the Struts2 server and get a shell.",
+  "category": "WEB",
+  "difficulty": 3,
+  "evidence_kind": "SECRET",
+  "capabilities": [
+    "ognl-injection",
+    "sandbox-bypass",
+    "remote-code-execution",
+    "java",
+    "struts2"
+  ]
+}
