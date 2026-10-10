@@ -1,0 +1,68 @@
+{
+  "objectives": [
+    {
+      "key": "main",
+      "title": "Read the flag",
+      "prompt": "Force a second OGNL evaluation through the id parameter, run a command and read /ctf/flag.",
+      "check": {
+        "evidence": "SECRET",
+        "format": "FLAG{%s}"
+      },
+      "dev": "FLAG{dev-vulhub-struts2-s2-061}",
+      "hints": [
+        "The page puts the id parameter into a tag attribute with forced evaluation. Read the S2-061 advisory, and S2-059 before it.",
+        "The flag is at /ctf/flag."
+      ],
+      "steps": [
+        {
+          "key": "framework",
+          "title": "Identify the framework",
+          "prompt": "Which Java web framework serves the page? (name only)",
+          "check": {
+            "answer": [
+              "struts",
+              "struts2",
+              "struts 2",
+              "apache struts",
+              "apache struts 2",
+              "apache struts2"
+            ]
+          }
+        },
+        {
+          "key": "advisory",
+          "title": "Name the advisory",
+          "prompt": "Which Struts security bulletin covers this bug?",
+          "check": {
+            "answer": [
+              "s2-061",
+              "s2061"
+            ]
+          }
+        },
+        {
+          "key": "parameter",
+          "title": "Find the parameter",
+          "prompt": "Which request parameter is evaluated twice? (parameter name)",
+          "check": {
+            "answer": [
+              "id"
+            ]
+          }
+        },
+        {
+          "key": "language",
+          "title": "Name the language",
+          "prompt": "Which expression language evaluates it? (acronym)",
+          "check": {
+            "answer": [
+              "ognl",
+              "object-graph navigation language",
+              "object graph navigation language"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

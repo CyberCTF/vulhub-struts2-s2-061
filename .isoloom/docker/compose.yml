@@ -13,8 +13,13 @@ services:
     networks:
       lab:
         ipv4_address: 10.61.14.10
+    environment:
+      CTF_FLAG_MAIN: ${CTF_FLAG_MAIN:-}
     ports:
     - ${ISOLOOM_PUBLISH_ADDRESS:-127.0.0.1}:${ISOLOOM_PUBLISH_FIXED:+8080}:8080
+    volumes:
+    - struts2-ctf:/ctf
+    - isoloom-probe-amd64:/.isoloom-probe:ro
     healthcheck:
       test:
       - CMD
@@ -26,8 +31,6 @@ services:
       timeout: 3s
       retries: 60
       start_period: 10s
-    volumes:
-    - isoloom-probe-amd64:/.isoloom-probe:ro
     depends_on:
       isoloom-probe-amd64:
         condition: service_completed_successfully
@@ -64,6 +67,26 @@ services:
     labels:
       isoloom.managed: 'true'
       isoloom.environment: vulhub-struts2-s2-061
+  struts2-init-1:
+    image: vulhub/struts2:2.5.25
+    entrypoint:
+    - /bin/sh
+    - /isoloom/init/flag.sh
+    volumes:
+    - ../../ctf/flag.sh:/isoloom/init/flag.sh:ro
+    - struts2-ctf:/ctf
+    network_mode: service:struts2
+    environment:
+      CTF_FLAG_MAIN: ${CTF_FLAG_MAIN:-}
+    depends_on:
+      struts2:
+        condition: service_healthy
+      struts2-routes:
+        condition: service_healthy
+    restart: no
+    labels:
+      isoloom.managed: 'true'
+      isoloom.environment: vulhub-struts2-s2-061
   isoloom-check:
     image: curlimages/curl:8.11.1
     profiles:
@@ -83,6 +106,8 @@ services:
     depends_on:
       struts2:
         condition: service_healthy
+      struts2-init-1:
+        condition: service_completed_successfully
       struts2-routes:
         condition: service_healthy
     labels:
@@ -101,6 +126,8 @@ services:
     depends_on:
       struts2:
         condition: service_healthy
+      struts2-init-1:
+        condition: service_completed_successfully
       struts2-routes:
         condition: service_healthy
     labels:
@@ -130,6 +157,10 @@ networks:
       isoloom.managed: 'true'
       isoloom.environment: vulhub-struts2-s2-061
 volumes:
+  struts2-ctf:
+    labels:
+      isoloom.managed: 'true'
+      isoloom.environment: vulhub-struts2-s2-061
   isoloom-probe-amd64:
     labels:
       isoloom.managed: 'true'
